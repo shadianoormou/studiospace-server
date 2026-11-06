@@ -8,7 +8,7 @@ export function createAuthentication(db, client, config) {
   const googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
   const auth = betterAuth({
     appName: 'StudioSpace', baseURL: config.origin, secret: config.secret,
-    database: mongodbAdapter(db, { client }), trustedOrigins: [config.origin],
+    database: mongodbAdapter(db, { client }), trustedOrigins: config.origins,
     emailAndPassword: { enabled: true, minPasswordLength: 6, maxPasswordLength: 128, autoSignIn: false, requireEmailVerification: false },
     socialProviders: googleEnabled ? { google: { clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET } } : {},
     advanced: { useSecureCookies: config.production },
@@ -39,7 +39,7 @@ export function createAuthentication(db, client, config) {
     next();
   }
   function checkOrigin(req, res, next) {
-    if (!['GET','HEAD','OPTIONS'].includes(req.method) && req.headers.origin !== config.origin) throw new HttpError(403, 'Request origin is not allowed.');
+    if (!['GET','HEAD','OPTIONS'].includes(req.method) && req.headers.origin && !config.origins.includes(req.headers.origin)) throw new HttpError(403, 'Request origin is not allowed.');
     next();
   }
   return { auth, session, issueToken, verifyToken, checkOrigin, googleEnabled };

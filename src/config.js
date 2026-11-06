@@ -8,6 +8,7 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET,
   production: process.env.NODE_ENV === 'production',
 };
+config.origins = [config.origin, config.origin.replace('localhost', '127.0.0.1')];
 export function validateConfig() {
   for (const field of ['mongoUri', 'secret', 'jwtSecret']) {
     if (!config[field]) throw new Error(`Missing configuration: ${field}. See .env.example.`);
