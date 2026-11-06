@@ -1,6 +1,6 @@
 # StudioSpace — Server
 
-Live API: pending deployment
+Live API: https://studiospace-server-6at5.onrender.com
 
 Express and MongoDB API for StudioSpace, a peer-to-peer creative workspace booking platform.
 
